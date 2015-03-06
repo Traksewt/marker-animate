@@ -7,11 +7,15 @@
 // options.duration   - animation duration in ms (default 1000)
 // options.easing     - easing function from jQuery and/or the jQuery easing plugin (default 'linear')
 // options.complete   - callback function. Gets called, after the animation has finished
+// options.startLat   - alternative start latitude, if not provided marker's position will be used
+// options.startLng   - alternative start longitude, if not provided marker's position will be used
 google.maps.Marker.prototype.animateTo = function(newPosition, options) {
   defaultOptions = {
     duration: 1000,
     easing: 'linear',
-    complete: null
+    complete: null,
+    startLat: this.getPosition().lat(),
+    startLng: this.getPosition().lng(),
   }
   options = options || {};
 
@@ -32,8 +36,8 @@ google.maps.Marker.prototype.animateTo = function(newPosition, options) {
   window.cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
 
   // save current position. prefixed to avoid name collisions. separate for lat/lng to avoid calling lat()/lng() in every frame
-  this.AT_startPosition_lat = this.getPosition().lat();
-  this.AT_startPosition_lng = this.getPosition().lng();
+  this.AT_startPosition_lat = options.startLat;
+  this.AT_startPosition_lng = options.startLng;
   var newPosition_lat = newPosition.lat();
   var newPosition_lng = newPosition.lng();
   
