@@ -83,9 +83,6 @@ google.maps.Marker.prototype.animateTo = function(newPosition, options) {
       
       setPosition.call(marker, newPosition);
 
-      //free up resources
-      delete marker._AT;
-
       if (typeof options.complete === 'function') {
         options.complete();
       }
