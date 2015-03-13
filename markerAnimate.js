@@ -36,19 +36,26 @@ google.maps.Marker.prototype.animateTo = function(newPosition, options) {
   window.cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
 
   // save current position. prefixed to avoid name collisions. separate for lat/lng to avoid calling lat()/lng() in every frame
-  this.AT_startPosition_lat = options.startLat;
-  this.AT_startPosition_lng = options.startLng;
+  this._AT = {
+      startPosition_lat: options.startLat,
+      startPosition_lng: options.startLng,
+      options: options,
+      newPosition: newPosition
+  };
   var newPosition_lat = newPosition.lat();
   var newPosition_lng = newPosition.lng();
   
   // crossing the 180° meridian and going the long way around the earth?
-  if (Math.abs(newPosition_lng - this.AT_startPosition_lng) > 180) {
-    if (newPosition_lng > this.AT_startPosition_lng) {      
+  if (Math.abs(newPosition_lng - this._AT.startPosition_lng) > 180) {
+    if (newPosition_lng > this._AT.startPosition_lng) {      
       newPosition_lng -= 360;      
     } else {
       newPosition_lng += 360;
     }
   }
+
+  //if AT_setPositionNoAnimation set, it will be called instead of setPosition.
+  var setPosition = this.AT_setPositionNoAnimation || this.setPosition;
 
   var animateStep = function(marker, startTime) {            
     var ellapsedTime = (new Date()).getTime() - startTime;
@@ -61,20 +68,23 @@ google.maps.Marker.prototype.animateTo = function(newPosition, options) {
     }
     
     if (durationRatio < 1) {
-      var deltaPosition = new google.maps.LatLng( marker.AT_startPosition_lat + (newPosition_lat - marker.AT_startPosition_lat)*easingDurationRatio,
-                                                  marker.AT_startPosition_lng + (newPosition_lng - marker.AT_startPosition_lng)*easingDurationRatio);
-      marker.setPosition(deltaPosition);
+      var deltaPosition = new google.maps.LatLng( marker._AT.startPosition_lat + (newPosition_lat - marker._AT.startPosition_lat)*easingDurationRatio,
+                                                  marker._AT.startPosition_lng + (newPosition_lng - marker._AT.startPosition_lng)*easingDurationRatio);
+      setPosition.call(marker, deltaPosition);
 
       // use requestAnimationFrame if it exists on this browser. If not, use setTimeout with ~60 fps
       if (window.requestAnimationFrame) {
-        marker.AT_animationHandler = window.requestAnimationFrame(function() {animateStep(marker, startTime)});                
+        marker._AT.animationHandler = window.requestAnimationFrame(function() {animateStep(marker, startTime)});                
       } else {
-        marker.AT_animationHandler = setTimeout(function() {animateStep(marker, startTime)}, 17); 
+        marker._AT.animationHandler = setTimeout(function() {animateStep(marker, startTime)}, 17); 
       }
 
     } else {
       
-      marker.setPosition(newPosition);
+      setPosition.call(marker, newPosition);
+
+      //free up resources
+      delete marker._AT;
 
       if (typeof options.complete === 'function') {
         options.complete();
@@ -85,10 +95,41 @@ google.maps.Marker.prototype.animateTo = function(newPosition, options) {
 
   // stop possibly running animation
   if (window.cancelAnimationFrame) {
-    window.cancelAnimationFrame(this.AT_animationHandler);
+    window.cancelAnimationFrame(this._AT.animationHandler);
   } else {
-    clearTimeout(this.AT_animationHandler); 
+    clearTimeout(this._AT.animationHandler); 
   }
   
   animateStep(this, (new Date()).getTime());
+}
+
+//jumpToEnd - default true.
+google.maps.Marker.prototype.stopAnimation = function (jumpToEnd) {
+    if (this._AT) {
+
+        if (jumpToEnd === undefined) {
+            jumpToEnd = true;
+        }
+
+        if (window.cancelAnimationFrame) {
+            window.cancelAnimationFrame(this._AT.animationHandler);
+        } else {
+            clearTimeout(this._AT.animationHandler);
+        }
+
+        var setPosition = this.AT_setPositionNoAnimation || this.setPosition;
+
+        if (jumpToEnd) {
+            setPosition.call(this, this._AT.newPosition);
+        }
+
+        var options = this._AT.options;
+
+        //free up resources
+        delete this._AT;
+
+        if (typeof options.complete === 'function') {
+            options.complete();
+        }
+    }
 }
