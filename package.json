@@ -3,7 +3,7 @@
   "title": "marker-animate",
   "version": "0.0.1",
   "description": "marker-animate",
-  "main": "markerAnimate.js",
+  "main": "dist/markerAnimate.umd.js",
   "scripts": {
     "//": "use '|| true' to prevent warning",
     "build": "npm install && grunt",

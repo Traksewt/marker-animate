@@ -12,11 +12,11 @@ module.exports = function(grunt) {
 			markerAnimate: {
 				options: {
 					src: 'markerAnimate.js',
-					dest: 'dist/markerAnimate.js',
+					dest: 'dist/markerAnimate.umd.js',
 					deps: {
 						'default': ['jQuery'],
-						amd: ['jquery', 'jquery.easing'],
-						cjs: ['jquery', 'jquery.easing']
+						amd: ['jquery-easing'],
+						cjs: ['jquery-easing']
 					}
 				}
 			}
@@ -28,8 +28,8 @@ module.exports = function(grunt) {
 				banner: '/* <%= grunt.task.current.target %> v<%= pkg.version %> <%= grunt.template.today("dd-mm-yyyy") %> Node wrapper for marker-animate (C) 2015 Terikon Software */\n'
 			},
 			markerAnimate: {
-				src: 'dist/markerAnimate.js',
-				dest: 'dist/markerAnimate.min.js'
+				src: 'dist/markerAnimate.umd.js',
+				dest: 'dist/markerAnimate.umd.min.js'
 			}
 		},
 
