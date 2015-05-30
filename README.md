@@ -4,6 +4,16 @@ A nice alternative to `marker.setPosition(latLng)`. Include jQuery and jQuery Ea
 
 Demo: http://robsite.net/static/markermove/markermove.html (click on the map)
 
+## Node wrapper
+
+This is node wrapper for the library, so it will be possible to use it from [NW.js](<http://nwjs.io/>).
+
+To use it from node:
+
+```
+npm install marker-animate
+```
+
 ## Usage
 
 Include `markerAnimate.js` after Google Maps and call `animateTo` on a `google.maps.Marker`:
