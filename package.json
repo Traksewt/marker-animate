@@ -14,7 +14,7 @@
     "type": "git",
     "url": "https://github.com/viskin/marker-animate.git#node-friendly"
   },
-  "license": "LicenseRef-LICENSE",
+  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "jquery": "*",
     "jquery-easing": "^0.0.1"
