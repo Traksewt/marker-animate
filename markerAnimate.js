@@ -13,6 +13,7 @@ google.maps.Marker.prototype.animateTo = function(newPosition, options) {
     easing: 'linear',
     complete: null
   }
+  var key
   options = options || {};
 
   // complete missing options
