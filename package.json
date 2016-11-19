@@ -1,0 +1,23 @@
+{
+  "name": "marker-animate",
+  "version": "0.0.1",
+  "description": "animate your google map markers",
+  "main": "markerAnimate.js",
+  "dependencies": {
+    "marker-animate": "^0.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Traksewt/marker-animate.git"
+  },
+  "author": "Robert Gerlach",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Traksewt/marker-animate/issues"
+  },
+  "homepage": "https://github.com/Traksewt/marker-animate#readme"
+}
