@@ -8,7 +8,7 @@
 // options.easing     - easing function from jQuery and/or the jQuery easing plugin (default 'linear')
 // options.complete   - callback function. Gets called, after the animation has finished
 google.maps.Marker.prototype.animateTo = function(newPosition, options) {
-  defaultOptions = {
+  var defaultOptions = {
     duration: 1000,
     easing: 'linear',
     complete: null
